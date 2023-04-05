@@ -11,7 +11,7 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
-
+import fileinput
 
 def pregunta_01():
     """
@@ -21,7 +21,11 @@ def pregunta_01():
     214
 
     """
-    return
+    count = 0
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            count+=int(line.split('\t')[1])
+    return count
 
 
 def pregunta_02():
@@ -39,7 +43,16 @@ def pregunta_02():
     ]
 
     """
-    return
+    resp = []
+    records = []
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            records.append(line.split('\t')[0])
+    options = set(records)
+    for op in options:
+        resp.append(tuple([op, records.count(op)]))
+    resp.sort(key=lambda x:x[0])
+    return resp
 
 
 def pregunta_03():
@@ -57,7 +70,18 @@ def pregunta_03():
     ]
 
     """
-    return
+    sums = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            zero = line.split('\t')[0]
+            one = int(line.split('\t')[1])
+            try:
+                sums[zero]+=one
+            except:
+                sums[zero] = one
+    resp = list(sums.items())
+    resp.sort(key=lambda x:x[0])
+    return resp
 
 
 def pregunta_04():
@@ -82,7 +106,17 @@ def pregunta_04():
     ]
 
     """
-    return
+    sums = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            month = line.split('\t')[2].split('-')[1]
+            try:
+                sums[month]+=1
+            except:
+                sums[month] = 1
+    resp = list(sums.items())
+    resp.sort(key=lambda x:x[0])
+    return resp
 
 
 def pregunta_05():
@@ -100,7 +134,22 @@ def pregunta_05():
     ]
 
     """
-    return
+    options = set()
+    records = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            zero = line.split('\t')[0]
+            options.add(zero)
+            one = int(line.split('\t')[1])
+            try:
+                records[zero].append(one)
+            except:
+                records[zero] = [one]
+    options = sorted(options)
+    resp = []
+    for op in options:
+        resp.append(tuple([op, max(records[op]), min(records[op])]))
+    return resp
 
 
 def pregunta_06():
@@ -125,7 +174,25 @@ def pregunta_06():
     ]
 
     """
-    return
+    options = set()
+    records = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            four = line.split('\t')[4].split(',')
+            for item in four:
+                k, v = item.split(':')
+                v = int(v.replace('\n', ''))
+                options.add(k)
+                try:
+                    records[k].append(v)
+                except:
+                    records[k] = [v]
+    
+    options = sorted(options)
+    resp = []
+    for op in options:
+        resp.append(tuple([op, min(records[op]), max(records[op])]))
+    return resp
 
 
 def pregunta_07():
@@ -149,7 +216,19 @@ def pregunta_07():
     ]
 
     """
-    return
+    resp = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            zero = line.split('\t')[0]
+            one = int(line.split('\t')[1])
+            try:
+                resp[one].append(zero)
+            except:
+                resp[one] = [zero]
+
+    resp = list(resp.items())
+    resp.sort(key=lambda x:x[0])
+    return resp
 
 
 def pregunta_08():
@@ -174,7 +253,22 @@ def pregunta_08():
     ]
 
     """
-    return
+    records = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            zero = line.split('\t')[0]
+            one = int(line.split('\t')[1])
+            try:
+                records[one].add(zero)
+            except:
+                records[one] = set(zero)
+
+    records = list(records.items())
+    records.sort(key=lambda x:x[0])
+    resp = []
+    for record in records:
+        resp.append(tuple([record[0], sorted(record[1])]))
+    return resp
 
 
 def pregunta_09():
@@ -197,8 +291,18 @@ def pregunta_09():
     }
 
     """
-    return
-
+    records = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            four = line.split('\t')[4].split(',')
+            for item in four:
+                k, v = item.split(':')
+                try:
+                    records[k]+=1
+                except:
+                    records[k] = 1
+    resp = {k: records[k] for k in sorted(records)}
+    return resp
 
 def pregunta_10():
     """
@@ -218,7 +322,15 @@ def pregunta_10():
 
 
     """
-    return
+    records = []
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            line = line.split('\t')
+            zero = line[0]
+            tree = line[3]
+            four = line[4]
+            records.append(tuple([zero, len(tree.split(',')), len(four.split(','))]))
+    return records
 
 
 def pregunta_11():
@@ -239,7 +351,19 @@ def pregunta_11():
 
 
     """
-    return
+    records = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            line = line.split('\t')
+            one = int(line[1])
+            tree = line[3]
+            for i in tree.split(','):
+                try:
+                    records[i]+=one
+                except:
+                    records[i] = one
+    resp = {k: records[k] for k in sorted(records)}
+    return resp
 
 
 def pregunta_12():
@@ -257,4 +381,16 @@ def pregunta_12():
     }
 
     """
-    return
+    records = {}
+    with fileinput.input(files='./data.csv') as f:
+        for line in f:
+            line = line.split('\t')
+            zero = line[0]
+            four = line[4].replace('\n', '')
+            for i in four.split(','):
+                try:
+                    records[zero]+=int(i.split(':')[1])
+                except:
+                    records[zero] = int(i.split(':')[1])
+    resp = {k: records[k] for k in sorted(records)}
+    return resp
